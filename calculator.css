@@ -15,18 +15,22 @@ h1 {
 button {
     display: flex;
     flex: 1;
+    justify-content: center;
     border-style: solid;
     font-family: monospace;
     font-size: 40px;
+    font-weight: bold;
     margin: 8px;
-    justify-content: center;
+    background-color: #904070;
+    color: #D0D0D0;
+    filter: drop-shadow(#404090 4px 4px);
+    text-shadow: black 4px 4px;
 }
 
 .calculator {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    align-items: center;
     border-style: solid;
     padding: 16px;
     background-color: #909090;
@@ -41,13 +45,9 @@ button {
     font-family: monospace;
     font-size: 80px;
     background-color: #8FF000;
-    color: #004000;
-}
-
-.buttons {
-    display: flex;
-    /* flex: 1; */
-    flex-direction: column;
+    color: green;
+    text-shadow: #004000 2px 2px;
+    font-weight: bold;
 }
 
 .row {
