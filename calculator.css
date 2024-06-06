@@ -1,0 +1,34 @@
+body {
+    background-color: #C0C0C0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-family: monospace;
+    font-size: 80px;
+    color: #404090;
+}
+
+.calculator {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    border-style: solid;
+    padding: 16px;
+    background-color: #909090;
+}
+
+.display {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    border-style: solid;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 80px;
+    background-color: #8FF000;
+    color: #004000;
+}

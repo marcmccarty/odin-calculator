@@ -4,13 +4,13 @@ let operator = "";
 
 function operate(num1, num2, operator) {
     if (operator == "add") {
-        add(num1, num2);
+        return add(num1, num2);
     } else if (operator == "subtract") {
-        subtract(num1, num2);
+        return subtract(num1, num2);
     } else if (operator == "multiply") {
-        multiply(num1, num2);
+        return multiply(num1, num2);
     } else if (operator == "divide") {
-        divide(num1, num2);
+        return divide(num1, num2);
     }
 }
 
