@@ -8,8 +8,10 @@ let overflowFlag = false;
 
 const displayElement = document.querySelector(".display");
 
+const buttonPercent = document.querySelector("#percent");
 const buttonCE = document.querySelector("#clear-entry");
 const buttonC = document.querySelector("#clear");
+const buttonBack = document.querySelector("#back");
 
 const buttonDivide = document.querySelector("#divide");
 const buttonMultiply = document.querySelector("#multiply");
@@ -29,8 +31,10 @@ const button7 = document.querySelector("#seven");
 const button8 = document.querySelector("#eight");
 const button9 = document.querySelector("#nine");
 
+buttonPercent.addEventListener("click", () => pressButton(buttonPercent.textContent));
 buttonCE.addEventListener("click", () => pressButton(buttonCE.textContent));
 buttonC.addEventListener("click", () => pressButton(buttonC.textContent));
+buttonBack.addEventListener("click", () => pressButton(buttonBack.textContent));
 
 buttonDivide.addEventListener("click", () => pressButton(buttonDivide.textContent));
 buttonMultiply.addEventListener("click", () => pressButton(buttonMultiply.textContent));
@@ -57,9 +61,10 @@ function pressButton(buttonValue) {
         }
     } else if (buttonValue == "=") {
         if (!overflowFlag && operator) {
+            let tempOperator = operator;
             operand1 = operate(operand1, operand2, operator);
-            operand2 = 0;
-            operator = "";
+            // operand2 = 0;
+            operator = tempOperator;
         }
     } else if (buttonValue == "CE") {
         displayElement.textContent = 0;
@@ -75,6 +80,18 @@ function pressButton(buttonValue) {
         operand2 = 0;
         operator = "";
         overflowFlag = false;
+    } else if (buttonValue == "←") {
+        displayElement.textContent = displayElement.textContent.substring(0, displayElement.textContent.length-1);
+        if (operator) {
+            operand2 = parseInt(displayElement.textContent);
+        } else {
+            operand1 = parseInt(displayElement.textContent);
+        }
+    } else if (buttonValue == "%") {
+        if (operator) {
+            operand2 = Math.round(operand1 * (operand2 / 100));
+            displayElement.textContent = operand2;
+        }
     } else if (buttonValue == "+") {
         if (operator) {
             operand1 = operate(operand1, operand2, operator);
