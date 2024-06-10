@@ -56,7 +56,7 @@ function pressButton(buttonValue) {
             updateDisplay(buttonValue);
         }
     } else if (buttonValue == "=") {
-        if (!overflowFlag) {
+        if (!overflowFlag && operator) {
             operand1 = operate(operand1, operand2, operator);
             operand2 = 0;
             operator = "";
