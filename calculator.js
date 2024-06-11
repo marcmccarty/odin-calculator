@@ -79,7 +79,6 @@ buttonDecimal.addEventListener("click", () => pressButton(buttonDecimal.textCont
 buttonEquals.addEventListener("click", () => pressButton(buttonEquals.textContent));
 
 function pressButton(buttonValue) {
-    console.log(`pressButton(buttonValue: ${buttonValue})`);
     if (typeof(buttonValue) == "number") {
         if (!overflowFlag) {
             updateDisplay(buttonValue);
@@ -156,6 +155,15 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand1.toString().substring(0,10);
         } else {
             operand1 = Math.sqrt(operand1);
+            displayElement.textContent = operand1.toString().substring(0,10);
+        }
+    } else if (buttonValue == "±") {
+        operatorLastPressed = true;
+        if (operator) {
+            operand2 *= -1;
+            displayElement.textContent = operand2.toString().substring(0,10);
+        } else {
+            operand1 *= -1;
             displayElement.textContent = operand1.toString().substring(0,10);
         }
     } else if (buttonValue == "+") {
