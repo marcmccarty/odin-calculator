@@ -128,7 +128,7 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand2.toString().substring(0,10);
         }
     } else if (buttonValue == "⅟ₓ") {
-        operatorLastPressed = false;
+        operatorLastPressed = true;
         if (operator) {
             operand1 = 1 / operate(operand1, operand2, operator);
             operand2 = 0;
@@ -139,7 +139,7 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand1.toString().substring(0,10);
         }
     } else if (buttonValue == "√") {
-        operatorLastPressed = false;
+        operatorLastPressed = true;
         if (operator) {
             operand1 = Math.sqrt(operate(operand1, operand2, operator));
             operand2 = 0;
