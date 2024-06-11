@@ -6,6 +6,7 @@ const MAX_DISPLAY_NEGATIVE = -999999999;
 const OVERFLOW = "OVERFLOW!";
 let overflowFlag = false;
 let equalsLastPressed = false;
+let operatorLastPressed = false;
 
 const displayElement = document.querySelector(".display");
 
@@ -74,16 +75,25 @@ function pressButton(buttonValue) {
         if (!overflowFlag) {
             updateDisplay(buttonValue);
         }
+        operatorLastPressed = false;
+        equalsLastPressed = false;
     } else if (buttonValue == ".") {
-        if (displayElement.textContent.length < 9 && !(displayElement.textContent.includes("."))) {
-            displayElement.textContent += ".";
+        if (operatorLastPressed) {
+            displayElement.textContent = "0.";
+        } else {
+            if (displayElement.textContent.length < 9 && !displayElement.textContent.includes(".")) {
+                displayElement.textContent += ".";
+            }
         }
+        operatorLastPressed = false;
     } else if (buttonValue == "=") {
+        operatorLastPressed = false;
         if (!overflowFlag && operator) {
             operand1 = operate(operand1, operand2, operator);
             equalsLastPressed = true;
         }
     } else if (buttonValue == "CE") {
+        operatorLastPressed = false;
         displayElement.textContent = 0;
         if (!operator) {
             operand1 = 0;
@@ -92,28 +102,33 @@ function pressButton(buttonValue) {
         }
         overflowFlag = false;
     } else if (buttonValue == "C") {
+        operatorLastPressed = false;
         displayElement.textContent = 0;
         operand1 = 0;
         operand2 = 0;
         operator = "";
         overflowFlag = false;
     } else if (buttonValue == "←") {
+        operatorLastPressed = false;
         if (!overflowFlag && displayElement.textContent.length > 1) {
             displayElement.textContent = displayElement
                 .textContent
                 .substring(0, displayElement.textContent.length-1);
-            if (operator) {
-                operand2 = parseFloat(displayElement.textContent);
-            } else {
-                operand1 = parseFloat(displayElement.textContent);
+            if (displayElement.textContent.charAt(displayElement.textContent.length-1) == ".") {
+                displayElement.textContent = displayElement
+                .textContent
+                .substring(0, displayElement.textContent.length-1);
             }
+            operand1 = parseFloat(displayElement.textContent);
         }
     } else if (buttonValue == "%") {
+        operatorLastPressed = false;
         if (operator) {
             operand2 = operand1 * (operand2 / 100);
             displayElement.textContent = operand2.toString().substring(0,10);
         }
     } else if (buttonValue == "⅟ₓ") {
+        operatorLastPressed = false;
         if (operator) {
             operand1 = 1 / operate(operand1, operand2, operator);
             operand2 = 0;
@@ -124,6 +139,7 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand1.toString().substring(0,10);
         }
     } else if (buttonValue == "√") {
+        operatorLastPressed = false;
         if (operator) {
             operand1 = Math.sqrt(operate(operand1, operand2, operator));
             operand2 = 0;
@@ -134,6 +150,7 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand1.toString().substring(0,10);
         }
     } else if (buttonValue == "+") {
+        operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
             operand2 = 0;
@@ -143,6 +160,7 @@ function pressButton(buttonValue) {
         }
         operator = "add";
     } else if (buttonValue == "-") {
+        operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
             operand2 = 0;
@@ -152,6 +170,7 @@ function pressButton(buttonValue) {
         }
         operator = "subtract";
     } else if (buttonValue == "×") {
+        operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
             operand2 = 0;
@@ -161,6 +180,7 @@ function pressButton(buttonValue) {
         }
         operator = "multiply";
     } else if (buttonValue == "÷") {
+        operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
             operand2 = 0;
@@ -170,6 +190,7 @@ function pressButton(buttonValue) {
         }
         operator = "divide";
     } else if (buttonValue == "^") {
+        operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
             operand2 = 0;
@@ -178,13 +199,12 @@ function pressButton(buttonValue) {
             operand2 = 0;
         }
         operator = "power";
-    } else {
-        operator = buttonValue;
     }
 }
 
 function updateDisplay(numberString) {
-    if (displayElement.textContent == 0 || (operator != "" && operand2 == 0)) {
+    if (displayElement.textContent.toString() == "0" || 
+    ((operatorLastPressed || equalsLastPressed) && operand2 == 0)) {
         displayElement.textContent = numberString;
         if (operator == "") {
             operand1 = parseFloat(numberString);
@@ -192,7 +212,7 @@ function updateDisplay(numberString) {
             operand2 = parseFloat(numberString);
         }
     } else if (displayElement.textContent.length < 10) {
-        displayElement.textContent += numberString;
+        displayElement.textContent += ("" + numberString);
         if (operator == "") {
             operand1 = parseFloat(displayElement.textContent);
         } else {
