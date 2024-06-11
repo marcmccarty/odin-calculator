@@ -10,6 +10,14 @@ let operatorLastPressed = false;
 
 const displayElement = document.querySelector(".display");
 
+document.addEventListener("keydown", (e) => {
+    if (!isNaN(parseInt(e.key))) {
+        pressButton(parseInt(e.key));
+    } else {
+        pressButton(e.key); 
+    }
+});
+
 // Row 1
 const buttonPercent = document.querySelector("#percent");
 const buttonCE = document.querySelector("#clear-entry");
@@ -71,6 +79,7 @@ buttonDecimal.addEventListener("click", () => pressButton(buttonDecimal.textCont
 buttonEquals.addEventListener("click", () => pressButton(buttonEquals.textContent));
 
 function pressButton(buttonValue) {
+    console.log(`pressButton(buttonValue: ${buttonValue})`);
     if (typeof(buttonValue) == "number") {
         if (!overflowFlag) {
             updateDisplay(buttonValue);
@@ -86,7 +95,7 @@ function pressButton(buttonValue) {
             }
         }
         operatorLastPressed = false;
-    } else if (buttonValue == "=") {
+    } else if (buttonValue == "=" || buttonValue == "Enter") {
         operatorLastPressed = false;
         if (!overflowFlag && operator) {
             operand1 = operate(operand1, operand2, operator);
@@ -101,14 +110,14 @@ function pressButton(buttonValue) {
             operand2 = 0;
         }
         overflowFlag = false;
-    } else if (buttonValue == "C") {
+    } else if (buttonValue == "C" || buttonValue == "Escape") {
         operatorLastPressed = false;
         displayElement.textContent = 0;
         operand1 = 0;
         operand2 = 0;
         operator = "";
         overflowFlag = false;
-    } else if (buttonValue == "←") {
+    } else if (buttonValue == "←" || buttonValue == "Backspace" || buttonValue == "Delete") {
         operatorLastPressed = false;
         if (!overflowFlag && displayElement.textContent.length > 1) {
             displayElement.textContent = displayElement
@@ -169,7 +178,7 @@ function pressButton(buttonValue) {
             operand2 = 0;
         }
         operator = "subtract";
-    } else if (buttonValue == "×") {
+    } else if (buttonValue == "×" || buttonValue == "*" || buttonValue == "x") {
         operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
@@ -179,7 +188,7 @@ function pressButton(buttonValue) {
             operand2 = 0;
         }
         operator = "multiply";
-    } else if (buttonValue == "÷") {
+    } else if (buttonValue == "÷" || buttonValue == "/") {
         operatorLastPressed = true;
         if (equalsLastPressed) {
             equalsLastPressed = false;
