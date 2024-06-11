@@ -5,54 +5,69 @@ const MAX_DISPLAY_POSITIVE = 9999999999;
 const MAX_DISPLAY_NEGATIVE = -999999999;
 const OVERFLOW = "OVERFLOW!";
 let overflowFlag = false;
+let equalsLastPressed = false;
 
 const displayElement = document.querySelector(".display");
 
+// Row 1
 const buttonPercent = document.querySelector("#percent");
 const buttonCE = document.querySelector("#clear-entry");
 const buttonC = document.querySelector("#clear");
 const buttonBack = document.querySelector("#back");
-
-const buttonDivide = document.querySelector("#divide");
-const buttonMultiply = document.querySelector("#multiply");
-const buttonSubtract = document.querySelector("#subtract");
-const buttonAdd = document.querySelector("#add");
-
-const buttonEquals = document.querySelector("#equals");
-
-const button0 = document.querySelector("#zero");
-const button1 = document.querySelector("#one");
-const button2 = document.querySelector("#two");
-const button3 = document.querySelector("#three");
-const button4 = document.querySelector("#four");
-const button5 = document.querySelector("#five");
-const button6 = document.querySelector("#six");
-const button7 = document.querySelector("#seven");
-const button8 = document.querySelector("#eight");
-const button9 = document.querySelector("#nine");
-
 buttonPercent.addEventListener("click", () => pressButton(buttonPercent.textContent));
 buttonCE.addEventListener("click", () => pressButton(buttonCE.textContent));
 buttonC.addEventListener("click", () => pressButton(buttonC.textContent));
 buttonBack.addEventListener("click", () => pressButton(buttonBack.textContent));
 
+// Row 2
+const buttonReciprocal = document.querySelector("#reciprocal");
+const buttonPower = document.querySelector("#power");
+const buttonRoot = document.querySelector("#root");
+const buttonDivide = document.querySelector("#divide");
+buttonReciprocal.addEventListener("click", () => pressButton(buttonReciprocal.textContent));
+buttonPower.addEventListener("click", () => pressButton(buttonPower.textContent));
+buttonRoot.addEventListener("click", () => pressButton(buttonRoot.textContent));
 buttonDivide.addEventListener("click", () => pressButton(buttonDivide.textContent));
-buttonMultiply.addEventListener("click", () => pressButton(buttonMultiply.textContent));
-buttonSubtract.addEventListener("click", () => pressButton(buttonSubtract.textContent));
-buttonAdd.addEventListener("click", () => pressButton(buttonAdd.textContent));
 
-buttonEquals.addEventListener("click", () => pressButton(buttonEquals.textContent));
-
-button0.addEventListener("click", () => pressButton(parseInt(button0.textContent)));
-button1.addEventListener("click", () => pressButton(parseInt(button1.textContent)));
-button2.addEventListener("click", () => pressButton(parseInt(button2.textContent)));
-button3.addEventListener("click", () => pressButton(parseInt(button3.textContent)));
-button4.addEventListener("click", () => pressButton(parseInt(button4.textContent)));
-button5.addEventListener("click", () => pressButton(parseInt(button5.textContent)));
-button6.addEventListener("click", () => pressButton(parseInt(button6.textContent)));
+// Row 3
+const button7 = document.querySelector("#seven");
+const button8 = document.querySelector("#eight");
+const button9 = document.querySelector("#nine");
+const buttonMultiply = document.querySelector("#multiply");
 button7.addEventListener("click", () => pressButton(parseInt(button7.textContent)));
 button8.addEventListener("click", () => pressButton(parseInt(button8.textContent)));
 button9.addEventListener("click", () => pressButton(parseInt(button9.textContent)));
+buttonMultiply.addEventListener("click", () => pressButton(buttonMultiply.textContent));
+
+// Row 4
+const button4 = document.querySelector("#four");
+const button5 = document.querySelector("#five");
+const button6 = document.querySelector("#six");
+const buttonSubtract = document.querySelector("#subtract");
+button4.addEventListener("click", () => pressButton(parseInt(button4.textContent)));
+button5.addEventListener("click", () => pressButton(parseInt(button5.textContent)));
+button6.addEventListener("click", () => pressButton(parseInt(button6.textContent)));
+buttonSubtract.addEventListener("click", () => pressButton(buttonSubtract.textContent));
+
+// Row 5
+const button1 = document.querySelector("#one");
+const button2 = document.querySelector("#two");
+const button3 = document.querySelector("#three");
+const buttonAdd = document.querySelector("#add");
+button1.addEventListener("click", () => pressButton(parseInt(button1.textContent)));
+button2.addEventListener("click", () => pressButton(parseInt(button2.textContent)));
+button3.addEventListener("click", () => pressButton(parseInt(button3.textContent)));
+buttonAdd.addEventListener("click", () => pressButton(buttonAdd.textContent));
+
+// Row 6
+const buttonNegative = document.querySelector("#negative");
+const button0 = document.querySelector("#zero");
+const buttonDecimal = document.querySelector("#decimal");
+const buttonEquals = document.querySelector("#equals");
+buttonNegative.addEventListener("click", () => pressButton(buttonNegative.textContent));
+button0.addEventListener("click", () => pressButton(parseInt(button0.textContent)));
+buttonDecimal.addEventListener("click", () => pressButton(buttonDecimal.textContent));
+buttonEquals.addEventListener("click", () => pressButton(buttonEquals.textContent));
 
 function pressButton(buttonValue) {
     if (typeof(buttonValue) == "number") {
@@ -63,8 +78,8 @@ function pressButton(buttonValue) {
         if (!overflowFlag && operator) {
             let tempOperator = operator;
             operand1 = operate(operand1, operand2, operator);
-            // operand2 = 0;
             operator = tempOperator;
+            equalsLastPressed = true;
         }
     } else if (buttonValue == "CE") {
         displayElement.textContent = 0;
@@ -93,25 +108,37 @@ function pressButton(buttonValue) {
             displayElement.textContent = operand2;
         }
     } else if (buttonValue == "+") {
-        if (operator) {
+        if (equalsLastPressed) {
+            equalsLastPressed = false;
+            operand2 = 0;
+        } else if (operator) {
             operand1 = operate(operand1, operand2, operator);
             operand2 = 0;
         }
         operator = "add";
     } else if (buttonValue == "-") {
-        if (operator) {
+        if (equalsLastPressed) {
+            equalsLastPressed = false;
+            operand2 = 0;
+        } else if (operator) {
             operand1 = operate(operand1, operand2, operator);
             operand2 = 0;
         }
         operator = "subtract";
     } else if (buttonValue == "×") {
-        if (operator) {
+        if (equalsLastPressed) {
+            equalsLastPressed = false;
+            operand2 = 0;
+        } else if (operator) {
             operand1 = operate(operand1, operand2, operator);
             operand2 = 0;
         }
         operator = "multiply";
     } else if (buttonValue == "÷") {
-        if (operator) {
+        if (equalsLastPressed) {
+            equalsLastPressed = false;
+            operand2 = 0;
+        } else if (operator) {
             operand1 = operate(operand1, operand2, operator);
             operand2 = 0;
         }
