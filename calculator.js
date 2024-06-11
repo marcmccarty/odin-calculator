@@ -74,11 +74,13 @@ function pressButton(buttonValue) {
         if (!overflowFlag) {
             updateDisplay(buttonValue);
         }
+    } else if (buttonValue == ".") {
+        if (displayElement.textContent.length < 9 && !(displayElement.textContent.includes("."))) {
+            displayElement.textContent += ".";
+        }
     } else if (buttonValue == "=") {
         if (!overflowFlag && operator) {
-            let tempOperator = operator;
             operand1 = operate(operand1, operand2, operator);
-            operator = tempOperator;
             equalsLastPressed = true;
         }
     } else if (buttonValue == "CE") {
@@ -96,16 +98,40 @@ function pressButton(buttonValue) {
         operator = "";
         overflowFlag = false;
     } else if (buttonValue == "←") {
-        displayElement.textContent = displayElement.textContent.substring(0, displayElement.textContent.length-1);
-        if (operator) {
-            operand2 = parseInt(displayElement.textContent);
-        } else {
-            operand1 = parseInt(displayElement.textContent);
+        if (!overflowFlag && displayElement.textContent.length > 1) {
+            displayElement.textContent = displayElement
+                .textContent
+                .substring(0, displayElement.textContent.length-1);
+            if (operator) {
+                operand2 = parseFloat(displayElement.textContent);
+            } else {
+                operand1 = parseFloat(displayElement.textContent);
+            }
         }
     } else if (buttonValue == "%") {
         if (operator) {
-            operand2 = Math.round(operand1 * (operand2 / 100));
-            displayElement.textContent = operand2;
+            operand2 = operand1 * (operand2 / 100);
+            displayElement.textContent = operand2.toString().substring(0,10);
+        }
+    } else if (buttonValue == "⅟ₓ") {
+        if (operator) {
+            operand1 = 1 / operate(operand1, operand2, operator);
+            operand2 = 0;
+            operator = "";
+            displayElement.textContent = operand1.toString().substring(0,10);
+        } else {
+            operand1 = 1 / operand1;
+            displayElement.textContent = operand1.toString().substring(0,10);
+        }
+    } else if (buttonValue == "√") {
+        if (operator) {
+            operand1 = Math.sqrt(operate(operand1, operand2, operator));
+            operand2 = 0;
+            operator = "";
+            displayElement.textContent = operand1.toString().substring(0,10);
+        } else {
+            operand1 = Math.sqrt(operand1);
+            displayElement.textContent = operand1.toString().substring(0,10);
         }
     } else if (buttonValue == "+") {
         if (equalsLastPressed) {
@@ -143,6 +169,15 @@ function pressButton(buttonValue) {
             operand2 = 0;
         }
         operator = "divide";
+    } else if (buttonValue == "^") {
+        if (equalsLastPressed) {
+            equalsLastPressed = false;
+            operand2 = 0;
+        } else if (operator) {
+            operand1 = operate(operand1, operand2, operator);
+            operand2 = 0;
+        }
+        operator = "power";
     } else {
         operator = buttonValue;
     }
@@ -152,16 +187,16 @@ function updateDisplay(numberString) {
     if (displayElement.textContent == 0 || (operator != "" && operand2 == 0)) {
         displayElement.textContent = numberString;
         if (operator == "") {
-            operand1 = parseInt(numberString);
+            operand1 = parseFloat(numberString);
         } else {
-            operand2 = parseInt(numberString);
+            operand2 = parseFloat(numberString);
         }
     } else if (displayElement.textContent.length < 10) {
         displayElement.textContent += numberString;
         if (operator == "") {
-            operand1 = parseInt(displayElement.textContent);
+            operand1 = parseFloat(displayElement.textContent);
         } else {
-            operand2 = parseInt(displayElement.textContent);
+            operand2 = parseFloat(displayElement.textContent);
         }
     }
 }
@@ -170,8 +205,8 @@ function operate(num1, num2, operator) {
     if (operator == "add") {
         if (add(num1, num2) <= MAX_DISPLAY_POSITIVE && 
             add(num1, num2) >= MAX_DISPLAY_NEGATIVE) {
-            displayElement.textContent = Math.round(add(num1, num2));
-            return Math.round(add(num1, num2));
+            displayElement.textContent = add(num1, num2).toString().substring(0,10);
+            return add(num1, num2);
         } else {
             displayElement.textContent = OVERFLOW;
             overflowFlag = true;
@@ -180,8 +215,8 @@ function operate(num1, num2, operator) {
     } else if (operator == "subtract") {
         if (subtract(num1, num2) <= MAX_DISPLAY_POSITIVE && 
             subtract(num1, num2) >= MAX_DISPLAY_NEGATIVE) {
-            displayElement.textContent = Math.round(subtract(num1, num2));
-            return Math.round(subtract(num1, num2));
+            displayElement.textContent = subtract(num1, num2).toString().substring(0,10);
+            return subtract(num1, num2);
         } else {
             displayElement.textContent = OVERFLOW;
             overflowFlag = true;
@@ -190,8 +225,8 @@ function operate(num1, num2, operator) {
     } else if (operator == "multiply") {
         if (multiply(num1, num2) <= MAX_DISPLAY_POSITIVE && 
             multiply(num1, num2) >= MAX_DISPLAY_NEGATIVE) {
-            displayElement.textContent = Math.round(multiply(num1, num2));
-            return Math.round(multiply(num1, num2));
+            displayElement.textContent = multiply(num1, num2).toString().substring(0,10);
+            return multiply(num1, num2);
         } else {
             displayElement.textContent = OVERFLOW;
             overflowFlag = true;
@@ -200,8 +235,18 @@ function operate(num1, num2, operator) {
     } else if (operator == "divide") {
         if (divide(num1, num2) <= MAX_DISPLAY_POSITIVE && 
             divide(num1, num2) >= MAX_DISPLAY_NEGATIVE) {
-            displayElement.textContent = Math.round(divide(num1, num2));
-            return Math.round(divide(num1, num2));
+            displayElement.textContent = divide(num1, num2).toString().substring(0,10);
+            return divide(num1, num2);
+        } else {
+            displayElement.textContent = OVERFLOW;
+            overflowFlag = true;
+            return 0;
+        }
+    } else if (operator == "power") {
+        if (power(num1, num2) <= MAX_DISPLAY_POSITIVE && 
+            power(num1, num2) >= MAX_DISPLAY_NEGATIVE) {
+            displayElement.textContent = power(num1, num2).toString().substring(0,10);
+            return power(num1, num2);
         } else {
             displayElement.textContent = OVERFLOW;
             overflowFlag = true;
@@ -224,4 +269,8 @@ function multiply(a, b) {
 
 function divide(a, b) {
     return a / b;
+}
+
+function power(a, b) {
+    return Math.pow(a, b);
 }
